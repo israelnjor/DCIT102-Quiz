@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DCIT 102 Quiz App</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 20px; }
+    .quiz-box { background: #fff; padding: 20px; border-radius: 8px; max-width: 600px; margin: auto; box-shadow: 0 0 10px rgba(0,0,0,0.2); }
+    h1 { text-align: center; }
+    .question { font-size: 20px; margin-bottom: 15px; }
+    .options { list-style: none; padding: 0; }
+    .options li { margin: 8px 0; }
+    .btn { padding: 10px 15px; font-size: 16px; cursor: pointer; margin-top: 15px; }
+    .correct { color: green; font-weight: bold; }
+    .wrong { color: red; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div class="quiz-box">
+    <h1>DCIT 102 Hardware Quiz</h1>
+    <div class="question" id="question">Loading...</div>
+    <ul class="options" id="options"></ul>
+    <div id="feedback"></div>
+    <button class="btn" onclick="nextQuestion()">Next</button>
+  </div>
+
+  <script>
+    const questions = [
+      { question: "Computer hardware refers to:", options: ["Software programs", "Logical components", "Physical components", "Virtual components"], answer: 2 },
+      { question: "Which of these is NOT a main function of a computer?", options: ["Data processing", "Data deletion", "Data storage", "Control"], answer: 1 },
+      { question: "Which component coordinates all activities in the computer?", options: ["ALU", "Control Unit", "Register", "RAM"], answer: 1 },
+      { question: "Which of the following is NOT a functional component of a computer system?", options: ["CPU", "Power Supply", "I/O Unit", "Storage"], answer: 1 },
+      { question: "The CPU is also known as:", options: ["Hard drive", "Motherboard", "Microprocessor", "VGA"], answer: 2 },
+      { question: "What part of the CPU performs arithmetic operations?", options: ["Control Unit", "Registers", "ALU", "Cache"], answer: 2 },
+      { question: "Registers are used to:", options: ["Print output", "Store software", "Hold temporary data", "Perform arithmetic"], answer: 2 },
+      { question: "Which register holds the address of the next instruction?", options: ["MDR", "IR", "PC", "MAR"], answer: 2 },
+      { question: "CPU cache is:", options: ["Slower than RAM", "Faster than main memory", "Stored in hard disk", "Non-essential"], answer: 1 },
+      { question: "Which of the following is a CPU vendor?", options: ["Dell", "AMD", "HP", "Samsung"], answer: 1 },
+      { question: "Which memory is volatile?", options: ["ROM", "RAM", "PROM", "EEPROM"], answer: 1 },
+      { question: "RAM is used for:", options: ["Permanent storage", "Input data", "Temporary data storage", "Display purposes"], answer: 2 },
+      { question: "DRAM stands for:", options: ["Data Random Access Module", "Direct RAM Memory", "Dynamic Random Access Memory", "Default RAM Access Memory"], answer: 2 },
+      { question: "Which of the following needs to be refreshed periodically?", options: ["SRAM", "Cache", "DRAM", "ROM"], answer: 2 },
+      { question: "SRAM is commonly used in:", options: ["CD-ROM", "Cache", "Monitors", "Motherboards"], answer: 1 },
+      { question: "ROM stores:", options: ["Boot instructions", "Temporary data", "Sound files", "Application software"], answer: 0 },
+      { question: "EEPROM can be:", options: ["Erased with UV light", "Electrically erased and reprogrammed", "Erased magnetically", "Not erased at all"], answer: 1 },
+      { question: "Which is NOT a type of ROM?", options: ["PROM", "EPROM", "EEPROM", "DRAM"], answer: 3 },
+      { question: "Which of these is NOT a secondary storage device?", options: ["Hard disk", "RAM", "CD-ROM", "SSD"], answer: 1 },
+      { question: "Optical storage includes:", options: ["USB drives", "DVDs", "Magnetic tapes", "SSD"], answer: 1 },
+      { question: "Solid-state storage:", options: ["Has moving parts", "Uses flash memory", "Is magnetic-based", "Requires formatting"], answer: 1 },
+      { question: "A disadvantage of optical storage is:", options: ["Portability", "Low cost", "Compatibility issues", "Long shelf life"], answer: 2 },
+      { question: "Which is an input device?", options: ["Monitor", "Joystick", "Speaker", "Printer"], answer: 1 },
+      { question: "Which of the following is an output device?", options: ["Microphone", "Scanner", "Speaker", "Touchscreen"], answer: 2 },
+      { question: "What does the system unit contain?", options: ["Monitor", "RAM, CPU, ROM", "Mouse", "Printer"], answer: 1 },
+      { question: "BIOS is located on:", options: ["RAM", "Hard disk", "ROM chip", "USB"], answer: 2 },
+      { question: "CMOS stores:", options: ["Output results", "BIOS settings", "RAM content", "Input data"], answer: 1 },
+      { question: "The function of POST is to:", options: ["Display BIOS menu", "Test hardware at startup", "Format hard drives", "Store input data"], answer: 1 },
+      { question: "GPU is used to:", options: ["Store games", "Display graphics", "Increase storage", "Control hardware"], answer: 1 },
+      { question: "Which port is used for internet connection?", options: ["USB", "Ethernet", "HDMI", "VGA"], answer: 1 },
+      { question: "HDMI is used for:", options: ["Power supply", "Video and audio", "Storage", "Input"], answer: 1 },
+      { question: "Which cable replaced IDE?", options: ["Firewire", "SATA", "VGA", "HDMI"], answer: 1 },
+      { question: "USB cable is used to connect:", options: ["Monitors", "Hard drives", "External peripherals", "BIOS"], answer: 2 },
+      { question: "The bus that transfers data in both directions is:", options: ["Address bus", "Data bus", "Control bus", "Output bus"], answer: 1 },
+      { question: "Which bus is unidirectional?", options: ["Address bus", "Control bus", "Data bus", "Expansion bus"], answer: 0 },
+      { question: "What is the function of a bus in a computer system?", options: ["Store data", "Transmit signals and data", "Power input", "Display video"], answer: 1 },
+      { question: "PCI is a type of:", options: ["Cable", "Port", "Expansion bus", "Software"], answer: 2 },
+      { question: "AGP is used mainly for:", options: ["Sound processing", "Network communication", "Graphics processing", "Storage expansion"], answer: 2 },
+      { question: "True or False: RAM is faster than cache.", options: ["True", "False"], answer: 1 },
+      { question: "True or False: ROM is volatile memory.", options: ["True", "False"], answer: 1 },
+      { question: "True or False: USB stands for Universal Serial Bus.", options: ["True", "False"], answer: 0 },
+      { question: "True or False: BIOS helps in booting the operating system.", options: ["True", "False"], answer: 0 },
+      { question: "True or False: SRAM is slower than DRAM.", options: ["True", "False"], answer: 1 },
+      { question: "True or False: PCIe uses parallel data transfer.", options: ["True", "False"], answer: 1 },
+      { question: "True or False: SSDs have no moving parts.", options: ["True", "False"], answer: 0 },
+      { question: "True or False: DRAM needs frequent refresh cycles.", options: ["True", "False"], answer: 0 },
+      { question: "True or False: UEFI BIOS allows mouse navigation.", options: ["True", "False"], answer: 0 },
+      { question: "True or False: SIMM supports 64-bit data.", options: ["True", "False"], answer: 1 },
+      { question: "True or False: A scanner is an output device.", options: ["True", "False"], answer: 1 },
+      { question: "True or False: SATA is slower than IDE.", options: ["True", "False"], answer: 1 }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    function loadQuestion() {
+      const q = questions[currentQuestion];
+      document.getElementById("question").textContent = q.question;
+
+      const optionsList = document.getElementById("options");
+      optionsList.innerHTML = "";
+
+      q.options.forEach((opt, index) => {
+        const li = document.createElement("li");
+        li.innerHTML = `<button onclick="selectOption(${index})">${opt}</button>`;
+        optionsList.appendChild(li);
+      });
+
+      document.getElementById("feedback").textContent = "";
+    }
+
+    function selectOption(index) {
+      const correctIndex = questions[currentQuestion].answer;
+      const feedback = document.getElementById("feedback");
+
+      if (index === correctIndex) {
+        score++;
+        feedback.innerHTML = "<p class='correct'>Correct!</p>";
+      } else {
+        const correctAnswer = questions[currentQuestion].options[correctIndex];
+        feedback.innerHTML = `<p class='wrong'>Wrong! Correct answer is: ${correctAnswer}</p>`;
+      }
+    }
+
+    function nextQuestion() {
+      currentQuestion++;
+      if (currentQuestion < questions.length) {
+        loadQuestion();
+      } else {
+        document.querySelector(".quiz-box").innerHTML = `<h2>Quiz Completed</h2><p>Your Score: ${score} / ${questions.length}</p>`;
+      }
+    }
+
+    window.onload = loadQuestion;
+  </script>
+</body>
+</html>
